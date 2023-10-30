@@ -1,23 +1,32 @@
 #!/usr/bin/env zsh
 function _my_async_segment_compute() {
+  # Check if it is time to call the background task
   (( EPOCHREALTIME >= _my_async_segment_next_time )) || return
+  # Start background task
   async_job _my_async_segment_worker _my_async_segment_async $PWD
+  # Set time for next execution
   _my_async_segment_next_time=$((EPOCHREALTIME + 5))
 }
 
 function _my_async_segment_async() {
+  # Get parameters
   local working_directory=$1
+  # Do something slow
   sleep 1
   local result="$(date +'%H:%M:%S')"
+  # Output results
   echo $working_directory
   echo $result
 }
 
 function _my_async_segment_callback() {
+  # Get result
   local return_values=(${(f)3})
   local working_directory=$return_values[1]
   local result=$return_values[2]
+  # Store result
   _my_async_segment_result[$working_directory]=$result
+  # Uptate prompt
   zle reset-prompt
   zle -R
 }
