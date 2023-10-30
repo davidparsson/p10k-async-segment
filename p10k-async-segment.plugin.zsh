@@ -49,7 +49,6 @@ function prompt_my_async_segment() {
   if [[ -z $result ]]; then
     state="ABSENT"
   fi
-  
-  p10k segment -s $state -f blue -c "$result" -t "async:$result"
+  p10k segment -s $state -f blue -e -c '$_my_async_segment_result[$PWD]' -t 'async:$_my_async_segment_result[$PWD]'
 }
 
