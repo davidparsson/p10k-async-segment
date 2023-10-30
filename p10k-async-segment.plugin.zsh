@@ -24,7 +24,7 @@ function _my_async_segment_callback() {
   local return_values=(${(f)3})
   local working_directory=$return_values[1]
   local result=$return_values[2]
-  # Store result
+  # Store result in a global variable
   _my_async_segment_result[$working_directory]=$result
   # Uptate prompt
   zle reset-prompt
@@ -45,10 +45,7 @@ function prompt_my_async_segment() {
 
   local result="$_my_async_segment_result[$PWD]"
 
-  local state="PRESENT"
-  if [[ -z $result ]]; then
-    state="ABSENT"
-  fi
-  p10k segment -s $state -f blue -e -c '$_my_async_segment_result[$PWD]' -t 'async:$_my_async_segment_result[$PWD]'
+  # Expand result from global variables
+  p10k segment -f blue -e -c '$_my_async_segment_result[$PWD]' -t 'async:$_my_async_segment_result[$PWD]'
 }
 
